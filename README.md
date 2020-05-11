@@ -7,5 +7,5 @@ Schedule Zoom to connect to meetings.
 Install from the PSGallery:
 
 ```powershell
-Install-Module ZoomZoom
+Install-Module -Name ZoomZoom -Scope CurrentUser -Force
 ```
