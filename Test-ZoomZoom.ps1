@@ -15,4 +15,6 @@ Test-ModuleManifest -Path (Join-Path -Path $PSScriptRoot -ChildPath ZoomZoom | J
 
 Invoke-ScriptAnalyzer -Path ZoomZoom -ReportSummary -Recurse
 
-Publish-Module -Path ZoomZoom -NuGetApiKey $NuGetApiKey -WhatIf -Verbose
+if ($null -eq $NuGetApiKey) {
+    Publish-Module -Path ZoomZoom -NuGetApiKey $NuGetApiKey -WhatIf -Verbose
+}
