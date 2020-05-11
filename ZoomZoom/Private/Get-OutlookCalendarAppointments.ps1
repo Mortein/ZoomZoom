@@ -15,17 +15,17 @@
 #>
 function Get-OutlookCalendarAppointments {
 
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'DefaultSearchTime')]
 
     param (
 
         # The start date for the search
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true, parameterset = 'SearchTime')]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'SearchTime')]
         [datetime]
         $Start,
 
         # The end date for the search
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true, parameterSet = 'SearchTime')]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'SearchTime')]
         [datetime]
         $End
     )
@@ -35,7 +35,7 @@ function Get-OutlookCalendarAppointments {
         Add-Type -assembly "Microsoft.Office.Interop.Outlook"
 
         #Defines the DefaultFolderID for the Calendar, and creates our new COM Object
-        $CalendarFolderID = 9
+        $OutlookFolders = “Microsoft.Office.Interop.Outlook.OlDefaultFolders” -as [type]
         $Outlook = New-Object -ComObject Outlook.Application
         $NameSpace = $Outlook.GetNamespace('MAPI')
 
@@ -44,18 +44,16 @@ function Get-OutlookCalendarAppointments {
     }
 
     process {
-        if ($null -eq $Start) {
-            $Start = (Get-Date $Start).ToShortDateString()
-        }
-        if ($null -eq $End) {
-            $End = (Get-Date $End).ToShortDateString()
-        }
+        $Folder = $NameSpace.getDefaultFolder($OutlookFolders::olFolderCalendar)
 
-        $Filter = "[MessageClass]='IPM.Appointment' AND [Start] > '$Start' AND [End] < '$End'"
-
-        #Finds all meetings in the date ranges provided and returns them as
-        $Meetings += $NameSpace.GetDefaultFolder($CalendarFolderID).Items.Restrict($Filter)
+        if ($null -eq $start) {
+            $Meetings += $Folder.Items | Where-Object -Property Start -gt ((Get-Date).AddDays(-1))
+        }
+        else {
+            $Meetings += $Folder.Items | Where-Object -Property Start -gt $Start | Where-Object -Property End -lt $End
+        }
     }
+    #Process reucrring meetings
 
     end {
         return $Meetings
