@@ -6,7 +6,7 @@ function Get-ChildScripts {
     $Children = @( )
 
     $Children += if (Test-Path -Path (Join-Path -Path "$PSScriptRoot" -ChildPath "$Directory") -PathType Container) {
-        @( Get-ChildItem -Path (Join-Path -Path "$PSScriptRoot" -ChildPath "$Directory" | Join-Path "*.ps1") )
+        @( Get-ChildItem -Path (Join-Path -Path "$PSScriptRoot" -ChildPath "$Directory" | Join-Path -ChildPath "*.ps1") )
     }
 
     return $Children
@@ -27,5 +27,3 @@ $Private = Get-ChildScripts -Directory "Private"
 }
 
 Export-ModuleMember -Function $Public.BaseName
-
-Join-Path -Path "$PSScriptRoot" -ChildPath "Public" | Join-Path "*.ps1"
