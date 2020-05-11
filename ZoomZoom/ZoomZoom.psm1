@@ -1,4 +1,4 @@
-function Get-ChildScripts {
+function Get-ChildScript {
     param (
         [Parameter(Mandatory = $true)] [string] $Directory
     )
@@ -12,8 +12,8 @@ function Get-ChildScripts {
     return $Children
 }
 
-$Public = Get-ChildScripts -Directory "Public"
-$Private = Get-ChildScripts -Directory "Private"
+$Public = Get-ChildScript -Directory "Public"
+$Private = Get-ChildScript -Directory "Private"
 
 @($Public + $Private) | ForEach-Object {
     if ($_.Name -cnotmatch "\.Tests\.ps1$") {
