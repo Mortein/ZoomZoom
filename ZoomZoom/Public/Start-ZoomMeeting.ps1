@@ -3,7 +3,7 @@
 Join a Zoom Meeting
 
 .PARAMETER MeetingID
-ID of meeting to join, full meeting URL, or full meeting URL with password
+ID of meeting to join (may include hyphens), full meeting URL, or full meeting URL with password
 
 .PARAMETER Password
 Password to join meeting, if not included in MeetingID
