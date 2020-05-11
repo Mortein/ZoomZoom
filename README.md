@@ -1,6 +1,6 @@
 # ZoomZoom
 
-Schedule Zoom to connect to meetings.
+Schedule and connect to Zoom meetings.
 
 ## Install
 
