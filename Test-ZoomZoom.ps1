@@ -8,8 +8,7 @@ $ModuleName = "ZoomZoom"
 "PSScriptAnalyzer" | ForEach-Object {
     $Module = Get-Module -Name "$_" -ListAvailable
     if (!$Module) {
-        Write-Error -Message "Please install module $_"
-        break
+        Install-Module -Name $_ -Scope CurrentUser -Force
     }
 }
 
