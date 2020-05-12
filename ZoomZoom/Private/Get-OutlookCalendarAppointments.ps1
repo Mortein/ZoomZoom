@@ -6,6 +6,9 @@
 .EXAMPLE
     Get-OutlookCalendarAppointments
     Returns Outlook calendar appointments for the last 24 hours
+
+    Get-OutlookCalendarAppointments -Start 12/01/2020 -End 21/02/2020
+    Returns all non-recurring meetings between 12th January and 21st February 2020
 .INPUTS
     DateTime
 .OUTPUTS
