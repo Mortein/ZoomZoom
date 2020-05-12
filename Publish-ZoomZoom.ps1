@@ -2,20 +2,21 @@ param (
     [Parameter(Mandatory = $true)] [string] $NuGetApiKey
 )
 
-$ModuleName = "ZoomZoom"
-
-# Find out what the version should be
-[version] $Version = "1.0.0"
-$Module = Find-Module -Name "$ModuleName" -ErrorAction SilentlyContinue
-if ($Module) {
-    $Version = ("{0}.{1}.{2}" -f $Version.Major, $Version.Minor, $Version.Build + 1)
+# Import CustomModule for some functions
+try {
+    . .\CustomModule.ps1
+}
+catch {
+    Write-Error $_
+    exit 1
 }
 
-# Get the list of module functions
-$Functions = @()
-$Functions += Get-ChildItem -Path (Join-Path -Path "$ModuleName" -ChildPath "Public") -File | ForEach-Object { $_.BaseName }
+$ModuleName = "ZoomZoom"
+$BuildDirectory = "Build"
 
-# Update the manifest
-Update-ModuleManifest -Path (Join-Path -Path "$ModuleName" -ChildPath "$ModuleName.psd1") -ModuleVersion $Version -FunctionsToExport $Functions
+$ModulePath = Copy-CustomModule -Name $ModuleName -Directory $BuildDirectory
 
-Publish-Module -Path "$ModuleName" -NuGetApiKey $NuGetApiKey -Verbose
+# Update the module manifest
+Update-CustomModule -Name $ModuleName -Path $ModulePath
+
+Publish-Module -Path $ModulePath -NuGetApiKey $NuGetApiKey -Verbose
