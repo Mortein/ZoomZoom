@@ -53,7 +53,7 @@ $AnalyzerResults | ForEach-Object {
 } | Sort-Object -Property 'ScriptName', 'Line'
 
 # Publish
-if ($null -eq $NuGetApiKey) {
+if ($NuGetApiKey) {
     try {
         Publish-Module -Path $ModulePath -NuGetApiKey $NuGetApiKey -WhatIf -Verbose -ErrorAction Stop
     }
