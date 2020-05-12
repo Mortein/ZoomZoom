@@ -2,7 +2,7 @@
 .SYNOPSIS
     Returns meeting objects from Outlook
 .DESCRIPTION
-    Creates an Outlook COM application and returns all objects with message class IPM.Appointment from the Calendar Folder from the specified date range
+    Creates an Outlook COM application and returns all objects with message class IPM.Appointment from the Calendar Folder from the specified date range. If no date range is specified, all meetings from midnight the previous day, to the current time are returned
 .EXAMPLE
     Get-OutlookCalendarAppointments
     Returns Outlook calendar appointments for the last 24 hours
@@ -11,7 +11,7 @@
 .OUTPUTS
     System.__ComObject
 .NOTES
-    General notes
+
 #>
 function Get-OutlookCalendarAppointments {
 
@@ -21,12 +21,12 @@ function Get-OutlookCalendarAppointments {
 
         # The start date for the search
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'SearchTime')]
-        [datetime]
+        [string]
         $Start,
 
         # The end date for the search
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'SearchTime')]
-        [datetime]
+        [string]
         $End
     )
 
@@ -39,7 +39,7 @@ function Get-OutlookCalendarAppointments {
         $Outlook = New-Object -ComObject Outlook.Application
         $NameSpace = $Outlook.GetNamespace('MAPI')
 
-        #Results that will be returned
+        #Empty array to store our results
         $Meetings = @()
     }
 
@@ -47,13 +47,12 @@ function Get-OutlookCalendarAppointments {
         $Folder = $NameSpace.getDefaultFolder($OutlookFolders::olFolderCalendar)
 
         if ($null -eq $start) {
-            $Meetings += $Folder.Items | Where-Object -Property Start -gt ((Get-Date).AddDays(-1))
+            $Meetings += $Folder.Items | Where-Object -Property Start -gt ((Get-Date -Hour 00 -Minute 00 -Second 00).AddDays(-1))
         }
         else {
-            $Meetings += $Folder.Items | Where-Object -Property Start -gt $Start | Where-Object -Property End -lt $End
+            $Meetings += $Folder.Items | Where-Object -Property Start -gt (Get-Date $Start -Hour 00 -Minute 00 -Second 00) | Where-Object -Property End -lt (Get-Date $End -Hour 00 -Minute 00 -Second 00)
         }
     }
-    #Process reucrring meetings
 
     end {
         return $Meetings
