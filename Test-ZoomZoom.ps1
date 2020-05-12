@@ -2,6 +2,8 @@ param (
     [string] $NuGetApiKey
 )
 
+$ModuleName = "ZoomZoom"
+
 # Check for required modules
 "PSScriptAnalyzer" | ForEach-Object {
     $Module = Get-Module -Name "$_" -ListAvailable
@@ -11,10 +13,10 @@ param (
     }
 }
 
-Test-ModuleManifest -Path (Join-Path -Path $PSScriptRoot -ChildPath ZoomZoom | Join-Path -ChildPath "ZoomZoom.psd1")
+Test-ModuleManifest -Path (Join-Path -Path $PSScriptRoot -ChildPath "$ModuleName" | Join-Path -ChildPath "$ModuleName.psd1")
 
-Invoke-ScriptAnalyzer -Path ZoomZoom -ReportSummary -Recurse
+Invoke-ScriptAnalyzer -Path "$ModuleName" -ReportSummary -Recurse
 
 if ($null -eq $NuGetApiKey) {
-    Publish-Module -Path ZoomZoom -NuGetApiKey $NuGetApiKey -WhatIf -Verbose
+    Publish-Module -Path $ModuleName -NuGetApiKey $NuGetApiKey -WhatIf -Verbose
 }
