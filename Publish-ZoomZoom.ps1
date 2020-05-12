@@ -18,4 +18,4 @@ $Functions += Get-ChildItem -Path (Join-Path -Path "$ModuleName" -ChildPath "Pub
 # Update the manifest
 Update-ModuleManifest -Path (Join-Path -Path "$ModuleName" -ChildPath "$ModuleName.psd1") -ModuleVersion $Version -FunctionsToExport $Functions
 
-Publish-Module -Path ZoomZoom -NuGetApiKey $NuGetApiKey -Verbose
+Publish-Module -Path "$ModuleName" -NuGetApiKey $NuGetApiKey -Verbose
