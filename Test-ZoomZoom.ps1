@@ -6,7 +6,7 @@ $ModuleName = "ZoomZoom"
 
 $Errors = 0
 
-# Check for required modules
+# Check for and install required modules for testing
 "PSScriptAnalyzer" | ForEach-Object {
     $Module = Get-Module -Name "$_" -ListAvailable
     if (!$Module) {
