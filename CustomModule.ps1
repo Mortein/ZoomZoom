@@ -1,4 +1,6 @@
 function Update-CustomModule {
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
+
 	param (
 		[Parameter(Mandatory = $true)] [string] $Name,
 		[Parameter(Mandatory = $true)] [string] $Path
@@ -15,8 +17,10 @@ function Update-CustomModule {
 	$Functions = @()
 	$Functions += Get-ChildItem -Path (Join-Path -Path "$Path" -ChildPath "Public") -File | ForEach-Object { $_.BaseName }
 
-	# Update the manifest
-	Update-ModuleManifest -Path (Join-Path -Path "$Path" -ChildPath "$Name.psd1") -ModuleVersion $Version -FunctionsToExport $Functions
+	if ($PSCmdlet.ShouldProcess("Manifest", "Update")) {
+		# Update the manifest
+		Update-ModuleManifest -Path (Join-Path -Path "$Path" -ChildPath "$Name.psd1") -ModuleVersion $Version -FunctionsToExport $Functions
+	}
 }
 
 function Copy-CustomModule {
