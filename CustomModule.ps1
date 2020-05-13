@@ -1,3 +1,13 @@
+<#
+.SYNOPSIS
+Update manifest of custom module
+.DESCRIPTION
+Update manifest of custom module. Checks repository for an existing version and increments by one, otherwise uses 1.0.0. Updates module functions by using functions in Public directory
+.PARAMETER Name
+Name of custom module
+.PARAMETER Path
+Path to folder that contains .psd1 file.
+#>
 function Update-CustomModule {
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
 
@@ -23,6 +33,16 @@ function Update-CustomModule {
 	}
 }
 
+<#
+.SYNOPSIS
+Copies a custom module to a build directory
+.DESCRIPTION
+Copies a custom module to a build directory. After copying, returns path to module directory
+.PARAMETER Name
+Name of custom module. Should be a direct subdirectory
+.PARAMETER Directory
+Name of directory into which module will be copied
+#>
 function Copy-CustomModule {
 	param (
 		[Parameter(Mandatory = $true)] [string] $Name,
