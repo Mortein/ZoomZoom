@@ -19,15 +19,9 @@ $ModulePath = Copy-CustomModule -Name $ModuleName -Directory $BuildDirectory
 # Update the module manifest
 Update-CustomModule -Name $ModuleName -Path $ModulePath
 
-$Errors = 0
+"PSScriptAnalyzer" | Install-Dependency
 
-# Check for and install required modules for testing
-"PSScriptAnalyzer" | ForEach-Object {
-    $Module = Get-Module -Name "$_" -ListAvailable
-    if (!$Module) {
-        Install-Module -Name $_ -Scope CurrentUser -Force
-    }
-}
+$Errors = 0
 
 # Module manifest
 try {
