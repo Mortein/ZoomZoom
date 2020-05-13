@@ -19,4 +19,6 @@ $ModulePath = Copy-CustomModule -Name $ModuleName -Directory $BuildDirectory
 # Update the module manifest
 Update-CustomModule -Name $ModuleName -Path $ModulePath
 
+"PowerShellGet" | Install-Dependency
+
 Publish-Module -Path $ModulePath -NuGetApiKey $NuGetApiKey -Verbose
