@@ -56,3 +56,44 @@ function Copy-CustomModule {
 
 	return Get-Item -Path $TargetPath
 }
+
+<#
+.SYNOPSIS
+Install and update a module
+.DESCRIPTION
+Install a module, and update if a newer version is available. Will install as CurrentUser
+.PARAMETER Name
+Name of module to install and/or update
+#>
+function Install-Dependency {
+	param (
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true)] [string] $Name
+	)
+
+	process {
+		# Get the highest version of the module installed
+		$Module = Get-Module -Name "$Name" -ListAvailable
+		if ($Module.Count -gt 1) {
+			$Module = $Module[0]
+		}
+
+		try {
+			if (!$Module) {
+				Install-Module -Name $Name -Scope CurrentUser -Force -ErrorAction Stop
+			}
+			else {
+				# Get the version from the gallery
+				$GalleryModule = Find-Module -Name "$Name"
+
+				if ($GalleryModule.Version -gt $Module.Version) {
+					# Update the module
+					Update-Module -Name $Name -Force -ErrorAction Stop
+				}
+			}
+		}
+		catch {
+			Write-Error $_
+			break
+		}
+	}
+}
