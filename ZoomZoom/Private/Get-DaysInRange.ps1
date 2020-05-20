@@ -19,12 +19,12 @@ function Get-DaysInRange {
     param (
         # The Start Date for the array to calculate
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [datetime]
+        [string]
         $StartDate,
 
         # The end date for the array to calculate
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [datetime]
+        [string]
         $EndDate
 
     )
