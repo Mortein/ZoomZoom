@@ -21,7 +21,7 @@ function Get-RecurringMeetingDates {
         $DateArray
     )
 
-    Switch (($ppointment.GetRecurrencePattern()).DayOfWeekMask) {
+    Switch (($Appointment.GetRecurrencePattern()).DayOfWeekMask) {
         #CdoMonday/2 - The appointment recurs on Mondays.
         2 {
             Return $DateArray | Where-Object -Property DayOfWeek -eq 'Monday'
