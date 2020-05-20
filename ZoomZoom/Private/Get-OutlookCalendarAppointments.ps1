@@ -48,7 +48,7 @@ function Get-OutlookCalendarAppointments {
 
     process {
         $Folder = $NameSpace.getDefaultFolder($OutlookFolders::olFolderCalendar)
-
+        $RecurringAppointments = $Folder.Items | Where-Object -Property IsRecurring -eq $True
         if ($null -eq $start) {
             $Meetings += $Folder.Items | Where-Object -Property Start -gt ((Get-Date -Hour 00 -Minute 00 -Second 00).AddDays(-1))
         }
@@ -58,6 +58,14 @@ function Get-OutlookCalendarAppointments {
     }
 
     end {
-        return $Meetings
+        if ($Null -eq $RecurringAppointments) {
+            return $Meetings
+        }
+        else {
+            return [PSCustomObject]@{
+                Meetings          = $Meetings
+                RecurringMeetings = $RecurringAppointments
+            }
+        }
     }
 }
