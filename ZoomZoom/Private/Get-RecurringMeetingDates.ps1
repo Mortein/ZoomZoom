@@ -55,8 +55,13 @@ function Get-RecurringMeetingDates {
         }
         #CdoRecurTypeWeekly/1 - Appointment recurs weekly (DayOfWeekMask,Interval)
         1 {
+            $AppointmentDates = @()
             for ($i = 0; $i -lt ($DayOfWeekMask).Count; $i += (($Appointment.GetRecurrencePattern()).Interval)) {
-                $Results += $DayOfWeekMask[$i]
+                $AppointmentDates += $DayOfWeekMask[$i]
+            }
+            $Results += [PSCustomObject]@{
+                Appointment      = $Appointment
+                AppointmentDates = $AppointmentDates
             }
         }
         #CdoRecurTypeMonthly/2 - Appointment recurs monthly (DayOfMonth Interval)
