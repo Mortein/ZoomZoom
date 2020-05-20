@@ -63,9 +63,8 @@ function Get-OutlookCalendarAppointments {
             return $Meetings
         }
         else {
-            $DatesinSearchRange = Get-DaysInRange -StartDate $Start -EndDate $End
             Foreach ($Appointment in $RecurringAppointments) {
-                Get-RecurringMeetingDates -Appointment $Appointment -DateArray $DatesinSearchRange
+                Get-RecurringMeetingDates -Appointment $Appointment
             }
             return [PSCustomObject]@{
                 Meetings          = $Meetings
