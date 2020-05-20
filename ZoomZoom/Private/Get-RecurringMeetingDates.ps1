@@ -16,8 +16,9 @@ function Get-RecurringMeetingDates {
         $Appointment
     )
 
-    $DateArray = Get-DaysinRange -StartDate $Appointment.Start -EndDate Get-Date
+    $DateArray = Get-DaysinRange -StartDate ($Appointment.Start).ToString() -EndDate (Get-Date).ToString()
     $Results = @()
+
     Switch (($Appointment.GetRecurrencePattern()).DayOfWeekMask) {
         #CdoMonday/2 - The appointment recurs on Mondays.
         2 {
@@ -58,7 +59,7 @@ function Get-RecurringMeetingDates {
                 $Results += $DayOfWeekMask[$i]
             }
         }
-        #CdoRecurTypeMonthly/2 - Appointment recurs monthly
+        #CdoRecurTypeMonthly/2 - Appointment recurs monthly (DayOfMonth Interval)
         2 {
 
         }
@@ -74,6 +75,6 @@ function Get-RecurringMeetingDates {
         6 {
 
         }
-
     }
+    return $results
 }
