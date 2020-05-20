@@ -34,8 +34,8 @@ function Get-DaysInRange {
     }
 
     process {
-        $DateArray += $Start
-        $WorkingTime = $Start
+        $DateArray += $StartDate
+        $WorkingTime = $StartDate
         foreach ($_ in 1..$Timespan.Days) {
             $WorkingTime = $WorkingTime.AddDays(1)
             $DateArray += $WorkingTime
