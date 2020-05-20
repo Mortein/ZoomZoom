@@ -64,7 +64,12 @@ function Get-OutlookCalendarAppointments {
         }
         else {
             Foreach ($Appointment in $RecurringAppointments) {
-                Get-RecurringMeetingDates -Appointment $Appointment
+                $AppointmentDates = @()
+                $AppointmentDates += (Get-RecurringMeetingDates -Appointment $Appointment).AppointmentDates
+                $RecurringMeetings += [PSCustomObject]@{
+                    Appointment      = $Appointment
+                    AppointmentDates = $AppointmentDates
+                }
             }
             return [PSCustomObject]@{
                 Meetings          = $Meetings
