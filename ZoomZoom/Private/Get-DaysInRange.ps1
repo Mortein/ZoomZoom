@@ -26,11 +26,10 @@ function Get-DaysInRange {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [string]
         $EndDate
-
     )
 
     begin {
-        $Timespan = New-Timespan -Start $Start -End $End
+        $Timespan = New-Timespan -Start $StartDate -End $EndDate
         $DateArray = @()
     }
 
