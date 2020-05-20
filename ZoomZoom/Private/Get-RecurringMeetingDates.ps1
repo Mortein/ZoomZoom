@@ -28,19 +28,19 @@ function Get-RecurringMeetingDates {
         }
         #CdoTuesday/4 - The appointment recurs on Tuesdays.
         4 {
-            Return $DateArray | Where-Object -Property DayOfWeek -eq 'Tuesdays'
+            Return $DateArray | Where-Object -Property DayOfWeek -eq 'Tuesday'
         }
         #CdoWednesday/8 - The appointment recurs on Wednesdays.
         8 {
-            Return $DateArray | Where-Object -Property DayOfWeek -eq 'Wednesdays'
+            Return $DateArray | Where-Object -Property DayOfWeek -eq 'Wednesday'
         }
         #CdoThursday/16 - The appointment recurs on Thursdays.
         16 {
-            Return $DateArray | Where-Object -Property DayOfWeek -eq 'Thursdays'
+            Return $DateArray | Where-Object -Property DayOfWeek -eq 'Thursday'
         }
         #CdoFriday/32 - The appointment recurs on Fridays.
         32 {
-            Return $DateArray | Where-Object -Property DayOfWeek -eq 'Fridays'
+            Return $DateArray | Where-Object -Property DayOfWeek -eq 'Friday'
         }
         #Meeting that occur on every week day have the value of 62 (2+4+8+16+32)
         62 {
