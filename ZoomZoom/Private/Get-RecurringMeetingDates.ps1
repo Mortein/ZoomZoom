@@ -78,19 +78,19 @@ function Get-RecurringMeetingDates {
         }
         #CdoRecurTypeMonthly/2 - Appointment recurs monthly (DayOfMonth Interval)
         2 {
-
+            #Not yet doing anything with these
         }
         #CdoRecurTypeMonthlyNth/3 - Appointment recurs every Nth month
         3 {
-
+            #Not yet doing anything with these
         }
         #CdoRecurTypeYearly/5 - Appointment recurs every year
         5 {
-
+            #Not yet doing anything with these
         }
         #CdoRecurTypeYearlyNth/6 - Appointment recurs every Nth year
         6 {
-
+            #Not yet doing anything with these
         }
     }
     return $results
