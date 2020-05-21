@@ -15,21 +15,26 @@ function Get-ZoomStringFromBody {
     [CmdletBinding()]
     param (
         # A body of text that will contain a Zoom URL
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
-        $MeetingBody
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        $Body
     )
 
     begin {
     }
 
     process {
-        $SplitString = $MeetingBody -Split ([Environment]::NewLine)
+        $SplitString = $Body -Split ([Environment]::NewLine)
         Foreach ($String in $SplitString) {
             if ($String -match "\D{5,6}\/\/\S*\/j\/\d{10,11}\?{1}\S*") {
-                $Results = ((Select-String -InputObject $String -Pattern "\D{5,6}\/\/\S*\/j\/\d{10,11}\?{1}\S*") -split " ")[0]
+                $Results = (Select-String -InputObject $String -Pattern "\D{5,6}\/\/\S*\/j\/\d{10,11}\?{1}\S*").Matches.Value
+                break
             }
             elseif ($String -match "\D{5,6}\/\/\S*\/j\/\d{10,11}") {
-                $results = ((Select-String -InputObject $String -Pattern "\D{5,6}\/\/\S*\/j\/\d{10,11}") -split " ")[0]
+                $results = (Select-String -InputObject $String -Pattern "\D{5,6}\/\/\S*\/j\/\d{10,11}").Matches.Value
+                break
+            }
+            else {
+                $results = $null
             }
         }
     }
