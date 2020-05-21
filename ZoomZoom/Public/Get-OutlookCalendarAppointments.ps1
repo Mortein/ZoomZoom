@@ -65,6 +65,7 @@ function Get-OutlookCalendarAppointments {
                 MeetingTime    = $Meeting.Start
                 MeetingSubject = $Meeting.Subject
                 MeetingBody    = $Meeting.Body
+                MeetingURL     = Get-ZoomStringFromBody $Meeting.Body
                 Recurring      = $false
             }
         }
@@ -81,11 +82,18 @@ function Get-OutlookCalendarAppointments {
                             MeetingTime    = $Date
                             MeetingSubject = $Appointment.Subject
                             MeetingBody    = $Appointment.Body
+                            MeetingURL     = Get-ZoomStringFromBody $Appointment.Body
                             Recurring      = $true
                         }
                     }
                 }
             }
+
+            $defaultProperties = @('MeetingTime', 'MeetingSubject', 'MeetingURL', 'Recurring')
+            $defaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet(‘DefaultDisplayPropertySet’, [string[]]$defaultProperties)
+            $PSStandardMembers = [System.Management.Automation.PSMemberInfo[]]@($defaultDisplayPropertySet)
+            $Results | Add-Member MemberSet PSStandardMembers $PSStandardMembers
+
             return $Results
         }
     }
