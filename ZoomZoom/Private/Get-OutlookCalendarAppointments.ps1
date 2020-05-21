@@ -5,31 +5,28 @@
     Creates an Outlook COM application and returns all objects with message class IPM.Appointment from the Calendar Folder from the specified date range. If no date range is specified, all meetings from midnight the previous day, to the current time are returned
 .EXAMPLE
     Get-OutlookCalendarAppointments
-    Returns Outlook calendar appointments for the last 24 hours
+    Returns Outlook calendar appointments for the next 48 hours
 
     Get-OutlookCalendarAppointments -Start 12/01/2020 -End 21/02/2020
     Returns all non-recurring meetings between 12th January and 21st February 2020
-.INPUTS
-    DateTime
+
 .OUTPUTS
-    System.__ComObject
+    PSCustomObject
 .NOTES
 
 #>
 function Get-OutlookCalendarAppointments {
 
-    [CmdletBinding(DefaultParameterSetName = 'DefaultSearchTime')]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
 
     param (
 
         # The start date for the search
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'SearchTime')]
-        [string]
         $Start,
 
         # The end date for the search
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'SearchTime')]
-        [string]
         $End
     )
 
@@ -45,6 +42,10 @@ function Get-OutlookCalendarAppointments {
         #Empty array to store our results
         $Meetings = @()
         $Results = @()
+        if ($PSCmdlet.ParameterSetName -eq 'Default') {
+            $Start = Get-Date
+            $End = $Start.AddDays(2)
+        }
     }
 
     process {
@@ -73,7 +74,7 @@ function Get-OutlookCalendarAppointments {
         else {
             Foreach ($Appointment in $RecurringAppointments) {
                 $AppointmentDates = @()
-                $AppointmentDates += (Get-RecurringMeetingDates -Appointment $Appointment).AppointmentDates
+                $AppointmentDates += (Get-RecurringMeetingDates -Appointment $Appointment -EndDate (Get-Date $End).ToString()).AppointmentDates
                 foreach ($Date in $AppointmentDates) {
                     if ($Date -gt (Get-Date $Start)) {
                         $Results += [pscustomobject]@{
@@ -89,4 +90,3 @@ function Get-OutlookCalendarAppointments {
         }
     }
 }
-
