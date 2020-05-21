@@ -44,7 +44,7 @@ function Get-OutlookCalendarAppointments {
 
         #Empty array to store our results
         $Meetings = @()
-        $RecurringMeetings = @()
+        $Results = @()
     }
 
     process {
@@ -59,22 +59,34 @@ function Get-OutlookCalendarAppointments {
     }
 
     end {
+        foreach ($Meeting in $Meetings) {
+            $Results += [PSCustomObject]@{
+                MeetingTime    = $Meeting.Start
+                MeetingSubject = $Meeting.Subject
+                MeetingBody    = $Meeting.Body
+                Recurring      = $false
+            }
+        }
         if ($Null -eq $RecurringAppointments) {
-            return $Meetings
+            return $Results
         }
         else {
             Foreach ($Appointment in $RecurringAppointments) {
                 $AppointmentDates = @()
                 $AppointmentDates += (Get-RecurringMeetingDates -Appointment $Appointment).AppointmentDates
-                $RecurringMeetings += [PSCustomObject]@{
-                    Appointment      = $Appointment
-                    AppointmentDates = $AppointmentDates
+                foreach ($Date in $AppointmentDates) {
+                    if ($Date -gt (Get-Date $Start)) {
+                        $Results += [pscustomobject]@{
+                            MeetingTime    = $Date
+                            MeetingSubject = $Appointment.Subject
+                            MeetingBody    = $Appointment.Body
+                            Recurring      = $true
+                        }
+                    }
                 }
             }
-            return [PSCustomObject]@{
-                Meetings          = $Meetings
-                RecurringMeetings = $RecurringMeetings
-            }
+            return $Results
         }
     }
 }
+
