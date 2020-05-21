@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Returns meeting objects from Outlook
 .DESCRIPTION
@@ -35,7 +35,7 @@ function Get-OutlookCalendarAppointments {
         Add-Type -assembly "Microsoft.Office.Interop.Outlook"
 
         #Defines the DefaultFolderID for the Calendar, and creates our new COM Object
-        $OutlookFolders = “Microsoft.Office.Interop.Outlook.OlDefaultFolders” -as [type]
+        $OutlookFolders = 'Microsoft.Office.Interop.Outlook.OlDefaultFolders' -as [type]
         $Outlook = New-Object -ComObject Outlook.Application
         $NameSpace = $Outlook.GetNamespace('MAPI')
 
