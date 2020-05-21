@@ -1,22 +1,35 @@
-#RecurrenceType values
 <#
-CdoRecurTypeDaily/0
-CdoRecurTypeWeekly/1 DayOfWeekMask Interval
-CdoRecurTypeMonthly/2 DayOfMonth Interval
-CdoRecurTypeMonthlyNth/3 DayOfWeekMask Instance Interval
-CdoRecurTypeYearly/5 DayOfMonth Interval MonthOfYear
-CdoRecurTypeYearlyNth/6
-#>
+.SYNOPSIS
+    Returns an appointment object and all dates for that appointment based off its recurrence pattern
+.DESCRIPTION
+    Takes an Outlook Recurring Appointment object. Calculates all possible occurences of the appointment based off of
+    the Start timestampt, and the Recurrence Pattern.
+    The Recurrence Pattern defines a RecurrenceType, an integer that specifies if it's a daily, weekly, monthly, nth monthly,
+    yearly, or nth yearly meeting.
+    Each Typoe can then contain DayofWeek masks or WeekofMonth masks that confirm what day, days, or week they occur on.
+.EXAMPLE
+    $Appointment | Get-RecurringMeetingDates -EndDate 30/01/2020
+    Returns all valid appointment dates for the input recurring appointment object
+.INPUTS
+    Outlook Recurring Appointment
+.OUTPUTS
+    pscustomobject
+.NOTES
 
+#>
 function Get-RecurringMeetingDates {
     param (
         # An Outlook appointment item
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [object]
-        $Appointment
+        $Appointment,
+
+        # The date to calculate the last occurence of a recurring appointment
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        $EndDate
     )
 
-    $DateArray = Get-DaysinRange -StartDate ($Appointment.Start).ToString() -EndDate (Get-Date).ToString()
+    $DateArray = Get-DaysinRange -StartDate ($Appointment.Start).ToString() -EndDate (Get-Date $EndDate).ToString()
     $Results = @()
 
     Switch (($Appointment.GetRecurrencePattern()).DayOfWeekMask) {
@@ -41,10 +54,9 @@ function Get-RecurringMeetingDates {
             $DayOfWeekMask = $DateArray | Where-Object -Property DayOfWeek -eq 'Friday'
         }
         #Meeting that occur on every week day have the value of 62 (2+4+8+16+32)
-        #62 {
-        #    $DayOfWeekMask += $DateArray | Where-Object -Property DayOfWeek -NotMatch ^[S*]
-        #    return $Results
-        #}
+        62 {
+            $DayOfWeekMask += $DateArray | Where-Object -Property DayOfWeek -NotMatch ^[S*]
+        }
     }
 
     Switch (($Appointment.GetRecurrencePattern()).RecurrenceType) {
