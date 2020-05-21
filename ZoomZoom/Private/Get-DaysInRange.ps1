@@ -2,12 +2,12 @@
 .SYNOPSIS
     Returns the days, months, and years of all days between 2 days
 .DESCRIPTION
-    Long description
+    Calculates a timespan between 2 dates, then returns each day between those 2 dates as datetime objects
 .EXAMPLE
     Get-DaysInRange -StartDate 1/1/2020 -EndDate 30/1/2020
     Returns all days in January 2020 as an array
 .INPUTS
-    Datetime objects
+    Datetime strings
 .OUTPUTS
     Array of Datetime objects
 .NOTES
