@@ -15,7 +15,7 @@
 .NOTES
 
 #>
-function Get-OutlookCalendarAppointments {
+function Get-OutlookCalendarAppointment {
 
     [CmdletBinding(DefaultParameterSetName = 'Default')]
 
