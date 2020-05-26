@@ -29,69 +29,78 @@ function ConvertFrom-AppointmentRecurrencePattern {
         $EndDate
     )
 
-    $DateArray = Get-DaysinRange -StartDate ($Appointment.Start).ToString() -EndDate (Get-Date $EndDate).ToString()
-    $Results = @()
-
-    Switch (($Appointment.GetRecurrencePattern()).DayOfWeekMask) {
-        #CdoMonday/2 - The appointment recurs on Mondays.
-        2 {
-            $DayOfWeekMask = $DateArray | Where-Object -Property DayOfWeek -eq 'Monday'
-        }
-        #CdoTuesday/4 - The appointment recurs on Tuesdays.
-        4 {
-            $DayOfWeekMask = $DateArray | Where-Object -Property DayOfWeek -eq 'Tuesday'
-        }
-        #CdoWednesday/8 - The appointment recurs on Wednesdays.
-        8 {
-            $DayOfWeekMask = $DateArray | Where-Object -Property DayOfWeek -eq 'Wednesday'
-        }
-        #CdoThursday/16 - The appointment recurs on Thursdays.
-        16 {
-            $DayOfWeekMask = $DateArray | Where-Object -Property DayOfWeek -eq 'Thursday'
-        }
-        #CdoFriday/32 - The appointment recurs on Fridays.
-        32 {
-            $DayOfWeekMask = $DateArray | Where-Object -Property DayOfWeek -eq 'Friday'
-        }
-        #Meeting that occur on every week day have the value of 62 (2+4+8+16+32)
-        62 {
-            $DayOfWeekMask += $DateArray | Where-Object -Property DayOfWeek -NotMatch ^[S*]
-        }
+    begin {
+        $Results = @()
     }
 
-    Switch (($Appointment.GetRecurrencePattern()).RecurrenceType) {
-        #CdoRecurTypeDaily/0 - Appointments that recur daily
-        0 {
-            $Results += $DateArray | Where-Object -Property DayOfWeek -NotMatch ^[S*]
-            return $Results
-        }
-        #CdoRecurTypeWeekly/1 - Appointment recurs weekly (DayOfWeekMask,Interval)
-        1 {
-            $AppointmentDates = @()
-            for ($i = 0; $i -lt ($DayOfWeekMask).Count; $i += (($Appointment.GetRecurrencePattern()).Interval)) {
-                $AppointmentDates += $DayOfWeekMask[$i]
+    process {
+        $DateArray = Get-DaysinRange -StartDate ($Appointment.Start).ToString() -EndDate (Get-Date $EndDate).ToString()
+        Switch (($Appointment.GetRecurrencePattern()).DayOfWeekMask) {
+            #CdoMonday/2 - The appointment recurs on Mondays.
+            2 {
+                $DayOfWeekMask = $DateArray | Where-Object -Property DayOfWeek -eq 'Monday'
             }
-            $Results += [PSCustomObject]@{
-                Appointment      = $Appointment
-                AppointmentDates = $AppointmentDates
+            #CdoTuesday/4 - The appointment recurs on Tuesdays.
+            4 {
+                $DayOfWeekMask = $DateArray | Where-Object -Property DayOfWeek -eq 'Tuesday'
+            }
+            #CdoWednesday/8 - The appointment recurs on Wednesdays.
+            8 {
+                $DayOfWeekMask = $DateArray | Where-Object -Property DayOfWeek -eq 'Wednesday'
+            }
+            #CdoThursday/16 - The appointment recurs on Thursdays.
+            16 {
+                $DayOfWeekMask = $DateArray | Where-Object -Property DayOfWeek -eq 'Thursday'
+            }
+            #CdoFriday/32 - The appointment recurs on Fridays.
+            32 {
+                $DayOfWeekMask = $DateArray | Where-Object -Property DayOfWeek -eq 'Friday'
+            }
+            #Meeting that occur on every week day have the value of 62 (2+4+8+16+32)
+            62 {
+                $DayOfWeekMask += $DateArray | Where-Object -Property DayOfWeek -NotMatch ^[S*]
             }
         }
-        #CdoRecurTypeMonthly/2 - Appointment recurs monthly (DayOfMonth Interval)
-        2 {
-            #Not yet doing anything with these
+
+        Switch (($Appointment.GetRecurrencePattern()).RecurrenceType) {
+            #CdoRecurTypeDaily/0 - Appointments that recur daily
+            0 {
+                $Results += $DateArray | Where-Object -Property DayOfWeek -NotMatch ^[S*]
+                return $Results
+            }
+            #CdoRecurTypeWeekly/1 - Appointment recurs weekly (DayOfWeekMask,Interval)
+            1 {
+                $AppointmentDates = @()
+                for ($i = 0; $i -lt ($DayOfWeekMask).Count; $i += (($Appointment.GetRecurrencePattern()).Interval)) {
+                    $AppointmentDates += $DayOfWeekMask[$i]
+                }
+                $Results += [PSCustomObject]@{
+                    Appointment      = $Appointment
+                    AppointmentDates = $AppointmentDates
+                }
+            }
+            #CdoRecurTypeMonthly/2 - Appointment recurs monthly (DayOfMonth Interval)
+            2 {
+                #Not yet doing anything with these
+            }
+            #CdoRecurTypeMonthlyNth/3 - Appointment recurs every Nth month
+            3 {
+                #Not yet doing anything with these
+            }
+            #CdoRecurTypeYearly/5 - Appointment recurs every year
+            5 {
+                #Not yet doing anything with these
+            }
+            #CdoRecurTypeYearlyNth/6 - Appointment recurs every Nth year
+            6 {
+                #Not yet doing anything with these
+            }
         }
-        #CdoRecurTypeMonthlyNth/3 - Appointment recurs every Nth month
-        3 {
-            #Not yet doing anything with these
-        }
-        #CdoRecurTypeYearly/5 - Appointment recurs every year
-        5 {
-            #Not yet doing anything with these
-        }
-        #CdoRecurTypeYearlyNth/6 - Appointment recurs every Nth year
-        6 {
-            #Not yet doing anything with these
-        }
+        return $results
+
     }
-    return $results
+
+    end {
+
+    }
 }
