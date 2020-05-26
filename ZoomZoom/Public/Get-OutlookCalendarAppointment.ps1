@@ -4,10 +4,10 @@
 .DESCRIPTION
     Creates an Outlook COM application and returns all objects with message class IPM.Appointment from the Calendar Folder from the specified date range. If no date range is specified, all meetings from midnight the previous day, to the current time are returned
 .EXAMPLE
-    Get-OutlookCalendarAppointments
+    Get-OutlookCalendarAppointment
     Returns Outlook calendar appointments for the next 48 hours
 
-    Get-OutlookCalendarAppointments -Start 12/01/2020 -End 21/02/2020
+    Get-OutlookCalendarAppointment -Start 12/01/2020 -End 21/02/2020
     Returns all non-recurring meetings between 12th January and 21st February 2020
 
 .OUTPUTS
@@ -57,9 +57,6 @@ function Get-OutlookCalendarAppointment {
         else {
             $Meetings += $Folder.Items | Where-Object -Property Start -gt (Get-Date $Start -Hour 00 -Minute 00 -Second 00) | Where-Object -Property End -lt (Get-Date $End -Hour 00 -Minute 00 -Second 00)
         }
-    }
-
-    end {
         foreach ($Meeting in $Meetings) {
             $Results += [PSCustomObject]@{
                 MeetingTime    = $Meeting.Start
@@ -69,6 +66,7 @@ function Get-OutlookCalendarAppointment {
                 Recurring      = $false
             }
         }
+
         if ($Null -eq $RecurringAppointments) {
             $defaultProperties = @('MeetingTime', 'MeetingSubject', 'MeetingURL', 'Recurring')
             $defaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet(‘DefaultDisplayPropertySet’, [string[]]$defaultProperties)
@@ -101,5 +99,8 @@ function Get-OutlookCalendarAppointment {
 
             return $Results
         }
+    }
+
+    end {
     }
 }
