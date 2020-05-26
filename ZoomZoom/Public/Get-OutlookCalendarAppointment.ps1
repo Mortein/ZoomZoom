@@ -70,6 +70,11 @@ function Get-OutlookCalendarAppointment {
             }
         }
         if ($Null -eq $RecurringAppointments) {
+            $defaultProperties = @('MeetingTime', 'MeetingSubject', 'MeetingURL', 'Recurring')
+            $defaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet(‘DefaultDisplayPropertySet’, [string[]]$defaultProperties)
+            $PSStandardMembers = [System.Management.Automation.PSMemberInfo[]]@($defaultDisplayPropertySet)
+            $Results | Add-Member MemberSet PSStandardMembers $PSStandardMembers
+
             return $Results
         }
         else {
