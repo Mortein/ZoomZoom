@@ -27,40 +27,33 @@
     This functions the same, it just looks for the \? and any characters until whitespace is found
 
     #>
-function Get-ZoomStringFromBody {
-    [CmdletBinding()]
-    param (
-        # A body of text that will contain a Zoom URL
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        $Body
-    )
+    function Get-ZoomStringFromBody {
+        [CmdletBinding()]
+        param (
+            # A body of text that will contain a Zoom URL
+            [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+            $Body
+        )
 
-    begin {
-    }
+        begin {
+        }
 
-    process {
-        #Break the body into individual strings at each newline character
-        $SplitString = $Body -Split ([Environment]::NewLine)
-        Foreach ($String in $SplitString) {
-            # Regex to match meetings with a password in the URL
-            if ($String -match "\D{5,6}\/\/\S*\/j\/\d{10,11}\?{1}\S*") {
-                #Return results for a match of our search string to the pipeline. Matches.Value on the returned object from Select String is only the text that was matched.
-                (Select-String -InputObject $String -Pattern "\D{5,6}\/\/\S*\/j\/\d{10,11}\?{1}\S*").Matches.Value
-                break
-            }
-            # Regex to match meetings with no password
-            elseif ($String -match "\D{5,6}\/\/\S*\/j\/\d{10,11}") {
-                #Return results for a match of our search string to the pipeline. Matches.Value on the returned object from Select String is only the text that was matched.
-                (Select-String -InputObject $String -Pattern "\D{5,6}\/\/\S*\/j\/\d{10,11}").Matches.Value
-                break
-            }
-            else {
-                #Return nothing if no URL found
-                break
-            }
+        process {
+                switch -Regex ($Body) {
+                    #Match zoom strings with passwords
+                    "\D{5,6}\/\/\S*\/j\/\d{10,11}\?{1}\S*" {
+                        return (Select-String -InputObject $Body -Pattern "\D{5,6}\/\/\S*\/j\/\d{10,11}\?{1}\S*").Matches.Value
+                        }
+                    #Match zoom strings without passwords
+                    "\D{5,6}\/\/\S*\/j\/\d{10,11}" {
+                        return (Select-String -InputObject $Body -Pattern "\D{5,6}\/\/\S*\/j\/\d{10,11}").Matches.Value
+                        }
+                    default {
+                        break
+                        }
+                    }
+                }
+
+        end {
         }
     }
-
-    end {
-    }
-}
