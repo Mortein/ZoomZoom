@@ -40,13 +40,9 @@
 
         process {
                 switch -Regex ($Body) {
-                    #Match zoom strings with passwords
-                    "\D{5,6}\/\/\S*\/j\/\d{10,11}\?{1}\S*" {
-                        return (Select-String -InputObject $Body -Pattern "\D{5,6}\/\/\S*\/j\/\d{10,11}\?{1}\S*").Matches.Value
-                        }
-                    #Match zoom strings without passwords
-                    "\D{5,6}\/\/\S*\/j\/\d{10,11}" {
-                        return (Select-String -InputObject $Body -Pattern "\D{5,6}\/\/\S*\/j\/\d{10,11}").Matches.Value
+                    # Match zoom strings with/without passwords
+                    "http(s|):\/\/(.*\.)*zoom.us\/j\/\d{9,11}(\?pwd=\w*)?" {
+                        return (Select-String -InputObject $Body -Pattern "http(s|):\/\/(.*\.)*zoom.us\/j\/\d{9,11}(\?pwd=\w*)?").Matches.Value
                         }
                     default {
                         break
