@@ -16,16 +16,14 @@
     The 11-digit number is used for instant, scheduled or recurring meetings. The 10-digit number is used for Personal Meeting IDs.
     Meetings scheduled prior to April 12, 2020 may be 9-digits long.
 
-    2 Regular expressions are used to find zoom URLs
+    Regular expressions are used to find zoom URLs
 
-    \D{5,6}\/\/\S*\/j\/\d{10,11} to locate URL's with no passwords
-    Match 5 to 6 non digit characters (http: or https:)
-    Followed by 2 "/" and any number of non whitespace characters, then /j/
-    Finally 10-11 digits
-
-    \D{5,6}\/\/\S*\/j\/\d{10,11}\?{1}\S* to located URLs with passwords in them
-    This functions the same, it just looks for the \? and any characters until whitespace is found
-
+    http(s|):\/\/(.*\.)*zoom.us\/j\/\d{9,11}(\?pwd=\w*)?
+    Match protocol http:// or https://
+    Optionally match Zoom vanity subdomain followed by a dot (e.g firstschool.)
+    Match zoom.us/j/
+    Match 9-11 digit meeting number
+    Optionally match password, ?pwd=PLAINTEXTSTRING
     #>
 function Get-ZoomStringFromBody {
     [CmdletBinding()]
