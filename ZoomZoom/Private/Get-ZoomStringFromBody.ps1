@@ -27,29 +27,29 @@
     This functions the same, it just looks for the \? and any characters until whitespace is found
 
     #>
-    function Get-ZoomStringFromBody {
-        [CmdletBinding()]
-        param (
-            # A body of text that will contain a Zoom URL
-            [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-            $Body
-        )
+function Get-ZoomStringFromBody {
+    [CmdletBinding()]
+    param (
+        # A body of text that will contain a Zoom URL
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        $Body
+    )
 
-        begin {
-        }
+    begin {
+    }
 
-        process {
-                switch -Regex ($Body) {
-                    # Match zoom strings with/without passwords
-                    "http(s|):\/\/(.*\.)*zoom.us\/j\/\d{9,11}(\?pwd=\w*)?" {
-                        return (Select-String -InputObject $Body -Pattern "http(s|):\/\/(.*\.)*zoom.us\/j\/\d{9,11}(\?pwd=\w*)?").Matches.Value
-                        }
-                    default {
-                        break
-                        }
-                    }
-                }
-
-        end {
+    process {
+        switch -Regex ($Body) {
+            # Match zoom strings with/without passwords
+            "http(s|):\/\/(.*\.)*zoom.us\/j\/\d{9,11}(\?pwd=\w*)?" {
+                return (Select-String -InputObject $Body -Pattern "http(s|):\/\/(.*\.)*zoom.us\/j\/\d{9,11}(\?pwd=\w*)?").Matches.Value
+            }
+            default {
+                break
+            }
         }
     }
+
+    end {
+    }
+}
