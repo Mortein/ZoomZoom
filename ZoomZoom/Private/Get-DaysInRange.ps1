@@ -30,7 +30,6 @@ function Get-DaysInRange {
 
     begin {
         $Timespan = New-Timespan -Start $StartDate -End $EndDate
-        $DateArray = @()
     }
 
     process {
