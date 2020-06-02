@@ -8,7 +8,7 @@
     yearly, or nth yearly meeting.
     Each Typoe can then contain DayofWeek masks or WeekofMonth masks that confirm what day, days, or week they occur on.
 .EXAMPLE
-    $Appointment | onvertFrom-AppointmentRecurrencePattern -EndDate 30/01/2020
+    $Appointment | ConvertFrom-AppointmentRecurrencePattern -EndDate 30/01/2020
     Returns all valid appointment dates for the input recurring appointment object
 .INPUTS
     Outlook Recurring Appointment
