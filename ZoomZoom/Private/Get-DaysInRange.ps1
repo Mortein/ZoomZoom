@@ -4,7 +4,7 @@
 .DESCRIPTION
     Calculates a timespan between 2 dates, then returns each day between those 2 dates as datetime objects
 .EXAMPLE
-    Get-DaysInRange -StartDate 1/1/2020 -EndDate 30/1/2020
+    Get-DaysInRange -StartDate 1/1/2020 -EndDate 31/1/2020
     Returns all days in January 2020 as an array
 .INPUTS
     Datetime strings
